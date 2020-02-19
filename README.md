@@ -28,6 +28,11 @@ After, 1000 iterations:
 <br>
 Hence, the network was improving during each iteration by adjusting the weights calculated using loss function.
 
+##
+
+Overall process can be summarized as:
+
+![](files/network.png)
 
 
 

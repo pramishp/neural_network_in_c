@@ -83,8 +83,9 @@ void main(){
 
             error_n += loss(training_outputs[x][0], outputLayer[0]);
             if (i % display_step == 0){
-                printf("Step %d, Error: %.4f, Inputs: [%f][%f], Pred: [%.4f], Out: [%f] \n",
-                        i, error_n/ i, training_inputs[x][0], training_inputs[x][1], outputLayer[0], training_outputs[x][0]);
+//                printf("Step %d, Error: %.4f, Inputs: [%f][%f], Pred: [%.4f], Out: [%f] \n",
+//                        i, error_n/ i, training_inputs[x][0], training_inputs[x][1], outputLayer[0], training_outputs[x][0]);
+                    printf("Step %d, Error: %.4f \n", i, error_n/ i);
             }
 
             // Forward propagation complete
@@ -113,24 +114,20 @@ void main(){
             for (int k=0; k<numOutputs; k++) {
                 outputLayerBias[k] += deltaOutput[k]* lr;
                 for (int l=0; l<numHiddenNodes; l++) {
-                    outputWeights[l][k]+=hiddenLayer[k]*deltaOutput[k]*lr;
+                    outputWeights[l][k]+= hiddenLayer[k]*deltaOutput[k]*lr;
                 }
             }
 
             for (int k=0; k<numHiddenNodes; k++) {
                 hiddenLayerBias[k] += deltaHidden[k]* lr;
                 for (int l=0; l<numInputs; l++) {
-                    hiddenWeights[l][k]+=training_inputs[x][k]*deltaHidden[k]*lr;
+                    hiddenWeights[l][k]+= training_inputs[x][k]*deltaHidden[k]*lr;
                 }
             }
 
 
         }
     }
-
-
-
-
 }
 
 

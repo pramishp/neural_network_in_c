@@ -8,8 +8,6 @@ double initWeight();
 void shuffle(int *array, int n);
 double loss(double real, double pred);
 
-
-
 #define numHiddenNodes 2
 #define numOutputs 1
 #define numInputs 2
@@ -27,13 +25,18 @@ void main(){
     double hiddenWeights[numInputs][numHiddenNodes];
     double outputWeights[numHiddenNodes][numOutputs];
 
+    double hiddenWeightsInitial[numInputs][numHiddenNodes];
+    double outputWeightsInitial[numHiddenNodes][numOutputs];
+
     double training_inputs[numTrainingSets][numInputs] = { {0.0,0.0},{1.0,0.0},{0.0,1.0},{1.0,1.0} };
     double training_outputs[numTrainingSets][numOutputs] = { {0.0},{1.0},{1.0},{0.0} };
 
     //initialize hidden weight
     for (int i=0; i<numInputs; i++) {
         for (int j=0; j<numHiddenNodes; j++) {
-            hiddenWeights[i][j] = initWeight();
+            double weight = initWeight();;
+            hiddenWeights[i][j] = weight;
+            hiddenWeightsInitial[i][j] = weight;
         }
     }
 
@@ -42,14 +45,19 @@ void main(){
         hiddenLayerBias[i] = initWeight();
         for (int j=0; j<numOutputs; j++) {
             outputLayerBias[j] = initWeight();
-            outputWeights[i][j] = initWeight();
+            double weight = initWeight();
+            outputWeights[i][j] = weight;
+            outputWeightsInitial[i][j] = weight;
         }
     }
 
+
+
+
     int trainingSetOrder[] = {0,1,2,3};
 
-    int num_iter = 1000;
-    int display_step = 50;
+    int num_iter = 1000000;
+    int display_step = 500;
 
     double error_n = 0;
 
@@ -80,12 +88,17 @@ void main(){
                 }
                 outputLayer[k] = sigmoid(activation);
             }
-
             error_n += loss(training_outputs[x][0], outputLayer[0]);
             if (i % display_step == 0){
-//                printf("Step %d, Error: %.4f, Inputs: [%f][%f], Pred: [%.4f], Out: [%f] \n",
-//                        i, error_n/ i, training_inputs[x][0], training_inputs[x][1], outputLayer[0], training_outputs[x][0]);
-                    printf("Step %d, Error: %.4f \n", i, error_n/ i);
+                if (i > 500){
+                    printf("Step %d, Error: %.4f, Inputs: [%f][%f], Pred: [%.4f], Out: [%f] \n",
+                           i, error_n/ i, training_inputs[x][0], training_inputs[x][1], training_outputs[x][0]>0?outputLayer[0]:outputLayer[0], training_outputs[x][0]);
+
+                } else {
+                    printf("Step %d, Error: %.4f, Inputs: [%f][%f], Pred: [%.4f], Out: [%f] \n",
+                           i, error_n/ i, training_inputs[x][0], training_inputs[x][1], outputLayer[0], training_outputs[x][0]);
+
+                }
             }
 
             // Forward propagation complete
@@ -128,8 +141,44 @@ void main(){
 
         }
     }
-}
 
+    //display trained weights
+
+    printf("Initial Output Weights : \n");
+    for (int k=0; k<numOutputs; k++) {
+        for (int l=0; l<numHiddenNodes; l++) {
+            printf("[%.4f] \t", outputWeightsInitial[l][k]);
+        }
+        printf("\n");
+    }
+
+    printf("Output Weights : \n");
+    for (int k=0; k<numOutputs; k++) {
+        for (int l=0; l<numHiddenNodes; l++) {
+            printf("[%.4f] \t", outputWeights[l][k]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    printf("\n");
+
+    printf("Initial Input Weights : \n");
+    for (int k=0; k<numHiddenNodes; k++) {
+        for (int l=0; l<numInputs; l++) {
+            printf("[%.4f] \t", hiddenWeightsInitial[l][k]);
+        }
+        printf("\n");
+    }
+
+    printf("Input Weights : \n");
+    for (int k=0; k<numHiddenNodes; k++) {
+       for (int l=0; l<numInputs; l++) {
+           printf("[%.4f] \t", hiddenWeights[l][k]);
+        }
+       printf("\n");
+    }
+
+}
 
 double sigmoid(double x) {
     // activation function
@@ -170,6 +219,7 @@ void shuffle(int *array, int n)
         }
     }
 }
+
 
 
 

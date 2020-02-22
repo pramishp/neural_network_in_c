@@ -34,6 +34,11 @@ Overall process can be summarized as:
 
 ![](files/network.png)
 
+Team Members:                   Roll No:
+1. Pramish Poudel               076bct047
+2. Prakash Chaulagain           076bct045
+3. Bikal Devkota                076bct0
+4. Denish Shrestha              076bct0
 
 
 
